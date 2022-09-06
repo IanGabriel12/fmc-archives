@@ -19,13 +19,23 @@ end
 theorem doubleneg_elim :
   ¬¬P → P  :=
 begin
-  sorry,
+  intro nnp,
+  by_cases p: P,
+    exact p,
+  
+    have ct := nnp p,
+    contradiction,
 end
 
 theorem doubleneg_law :
   ¬¬P ↔ P  :=
 begin
-  sorry,
+  have fst := doubleneg_elim P,
+  have snd := doubleneg_intro P,
+  split,
+    exact fst,
+
+    exact snd,
 end
 
 ------------------------------------------------
@@ -37,10 +47,10 @@ theorem disj_comm :
 begin
   intro disj,
   cases disj,
-  right,
-  exact disj,
-  left,
-  exact disj,
+    right,
+      exact disj,
+    left,
+      exact disj,
 end
 
 theorem conj_comm :
@@ -49,8 +59,9 @@ begin
   intro conj,
   cases conj with p q,
   split,
-  exact q,
-  exact p,
+    exact q,
+
+    exact p,
 end
 
 
@@ -61,13 +72,26 @@ end
 theorem impl_as_disj_converse :
   (¬P ∨ Q) → (P → Q)  :=
 begin
-  sorry,
+  intro disj,
+  intro p,
+  cases disj,
+
+    have contra := disj p,
+    contradiction,
+
+    exact disj,
 end
 
 theorem disj_as_impl :
   (P ∨ Q) → (¬P → Q)  :=
 begin
-  sorry,
+  intro disj,
+  intro np,
+  cases disj,
+    have contra := np disj,
+    contradiction,
+
+    exact disj,
 end
 
 
@@ -78,19 +102,36 @@ end
 theorem impl_as_contrapositive :
   (P → Q) → (¬Q → ¬P)  :=
 begin
-  sorry,
+  intro impl,
+  intro nq,
+  intro p,
+  have q := impl p,
+  have contra := nq q,
+  contradiction,
 end
 
 theorem impl_as_contrapositive_converse :
   (¬Q → ¬P) → (P → Q)  :=
 begin
-  sorry,
+  intro impl,
+  intro p,
+  by_cases q: Q,
+    exact q,
+
+    have np := impl q,
+    have contra := np p,
+    contradiction,
 end
 
 theorem contrapositive_law :
   (P → Q) ↔ (¬Q → ¬P)  :=
 begin
-  sorry,
+  have fst := impl_as_contrapositive P Q,
+  have snd := impl_as_contrapositive_converse P Q,
+  split,
+    exact fst,
+
+    exact snd,
 end
 
 
@@ -101,7 +142,8 @@ end
 theorem lem_irrefutable :
   ¬¬(P∨¬P)  :=
 begin
-  sorry,
+  intro ndisj,
+  by_cases P,
 end
 
 
@@ -112,7 +154,8 @@ end
 theorem peirce_law_weak :
   ((P → Q) → P) → ¬¬P  :=
 begin
-  sorry,
+  intro impl,
+  intro np,
 end
 
 
@@ -123,13 +166,30 @@ end
 theorem disj_as_negconj :
   P∨Q → ¬(¬P∧¬Q)  :=
 begin
-  sorry,
+  intro disj,
+  intro n_conj,
+  cases n_conj,
+  cases disj,
+
+    have contra := n_conj_left disj,
+    contradiction,
+
+    have contra := n_conj_right disj,
+    contradiction,
 end
 
 theorem conj_as_negdisj :
   P∧Q → ¬(¬P∨¬Q)  :=
 begin
-  sorry,
+  intro conj,
+  intro neg_disj,
+  cases conj,
+  cases neg_disj,
+    have ct := neg_disj conj_left,
+    contradiction,
+
+    have ct := neg_disj conj_right,
+    contradiction,
 end
 
 
@@ -137,28 +197,72 @@ end
 -- As leis de De Morgan para ∨,∧:
 ------------------------------------------------
 
+--Adicionado Pelo Ian--
+theorem disj_impl : 
+  (∀ p q: Prop, p → p ∨ q) :=
+begin
+  intro p,
+  intro q,
+  intro p_impl,
+  left,
+  exact p_impl,
+end
+----------------
+
 theorem demorgan_disj :
   ¬(P∨Q) → (¬P ∧ ¬Q)  :=
 begin
-  sorry,
+  intro neg_disj,
+  split,
+    intro p,
+    have impl := disj_impl P Q,
+    have disj := impl p,
+    have ct := neg_disj disj,
+    contradiction,
+
+    intro q,
+    have impl := disj_impl Q P,
+    have wr_disj := impl q,
+    have disj_cm := disj_comm Q P,
+    have rght_disj := disj_cm wr_disj,
+    have ct := neg_disj rght_disj,
+    contradiction,
 end
 
 theorem demorgan_disj_converse :
   (¬P ∧ ¬Q) → ¬(P∨Q)  :=
 begin
-  sorry,
+  intro conj_negs,
+  intro disj,
+  cases conj_negs with np nq,
+  cases disj with p q,
+    have ct := np p,
+    contradiction,
+
+    have ct := nq q,
+    contradiction,
 end
 
 theorem demorgan_conj :
   ¬(P∧Q) → (¬Q ∨ ¬P)  :=
 begin
+  intro neg_conj,
+  --LEM AQUI?
   sorry,
 end
 
 theorem demorgan_conj_converse :
   (¬Q ∨ ¬P) → ¬(P∧Q)  :=
 begin
-  sorry,
+  intro disj_negs,
+  intro conj,
+  cases conj with p q,
+  cases disj_negs with nq np,
+    have ct := nq q,
+    contradiction,
+
+    have ct := np p,
+    contradiction,
 end
 
 theorem demorgan_conj_law :
@@ -180,25 +284,77 @@ end
 theorem distr_conj_disj :
   P∧(Q∨R) → (P∧Q)∨(P∧R)  :=
 begin
-  sorry,
+  intro conj_disj,
+  cases conj_disj with p disj,
+  cases disj with q r,
+    left,
+    split,
+      exact p,
+      exact q,
+    
+    right,
+    split,
+      exact p,
+      exact r,
 end
 
 theorem distr_conj_disj_converse :
   (P∧Q)∨(P∧R) → P∧(Q∨R)  :=
 begin
-  sorry,
+  intro disj_conj,
+  cases disj_conj with conj_pq conj_pr,
+    cases conj_pq with p q,
+    split,
+      exact p,
+      left,
+        exact q,
+    
+    cases conj_pr with p r,
+    split,
+      exact p,
+      right,
+        exact r,
 end
 
 theorem distr_disj_conj :
   P∨(Q∧R) → (P∨Q)∧(P∨R)  :=
 begin
-  sorry,
+  intro distr_disj,
+  split,
+    cases distr_disj with p conj_qr,
+      left,
+        exact p,
+      
+      right,
+        cases conj_qr with q r,
+        exact q,
+    
+    cases distr_disj with p conj_qr,
+      left,
+        exact p,
+      
+      right,
+        cases conj_qr with q r,
+        exact r,
 end
 
 theorem distr_disj_conj_converse :
   (P∨Q)∧(P∨R) → P∨(Q∧R)  :=
 begin
-  sorry,
+  intro distr_conj,
+  cases distr_conj with disj_pq disj_pr,
+  cases disj_pq with p q,
+    left,
+      exact p,
+
+    cases disj_pr with p r,
+      left,
+        exact p,
+      
+      right,
+        split,
+          exact q,
+          exact r,
 end
 
 
