@@ -142,8 +142,17 @@ end
 theorem lem_irrefutable :
   ¬¬(P∨¬P)  :=
 begin
-  intro ndisj,
-  by_cases P,
+  intro n_lem,
+  have lem: P ∨ ¬P,
+    right,
+    intro p,
+    have disj: P ∨ ¬P,
+      left,
+      exact p,
+    have ct := n_lem disj,
+    contradiction,
+  have ct := n_lem lem,
+  contradiction,
 end
 
 
@@ -154,8 +163,14 @@ end
 theorem peirce_law_weak :
   ((P → Q) → P) → ¬¬P  :=
 begin
-  intro impl,
+  intro pierce,
   intro np,
+  have impl: P → Q,
+    intro p,
+    contradiction,
+  have p := pierce impl,
+  have ct := np p,
+  contradiction,
 end
 
 
@@ -246,8 +261,6 @@ end
 theorem demorgan_conj :
   ¬(P∧Q) → (¬Q ∨ ¬P)  :=
 begin
-  intro neg_conj,
-  --LEM AQUI?
   sorry,
 end
 
@@ -274,7 +287,11 @@ end
 theorem demorgan_disj_law :
   ¬(P∨Q) ↔ (¬P ∧ ¬Q)  :=
 begin
-  sorry,
+  have dmg_disj := demorgan_disj P Q,
+  have dmg_disj_con := demorgan_disj_converse P Q,
+  split,
+    exact dmg_disj,
+    exact dmg_disj_con,
 end
 
 ------------------------------------------------
@@ -365,13 +382,27 @@ end
 theorem curry_prop :
   ((P∧Q)→R) → (P→(Q→R))  :=
 begin
-  sorry,
+  intro cur,
+  intro p,
+  intro q,
+  have conj : P ∧ Q,
+    split,
+      exact p,
+      exact q,
+  
+  have r := cur conj,
+  exact r,
 end
 
 theorem uncurry_prop :
   (P→(Q→R)) → ((P∧Q)→R)  :=
 begin
-  sorry,
+  intro cur,
+  intro conj,
+  cases conj with p q,
+  have impl := cur p,
+  have r := impl q,
+  exact r,
 end
 
 
@@ -382,7 +413,8 @@ end
 theorem impl_refl :
   P → P  :=
 begin
-  sorry,
+  intro p,
+  exact p,
 end
 
 ------------------------------------------------
@@ -392,37 +424,59 @@ end
 theorem weaken_disj_right :
   P → (P∨Q)  :=
 begin
-  sorry,
+  intro p,
+  left,
+  exact p,
 end
 
 theorem weaken_disj_left :
   Q → (P∨Q)  :=
 begin
-  sorry,
+  intro q,
+  right,
+  exact q,
 end
 
 theorem weaken_conj_right :
   (P∧Q) → P  :=
 begin
-  sorry,
+  intro conj,
+  cases conj with p q,
+  exact p,
 end
 
 theorem weaken_conj_left :
   (P∧Q) → Q  :=
 begin
-  sorry,
+  intro conj,
+  cases conj with p q,
+  exact q,
 end
 
 theorem conj_idempot :
   (P∧P) ↔ P :=
 begin
-  sorry,
+  have left := weaken_conj_left P P,
+  split,
+    exact left,
+    
+    intro p,
+    split,
+      exact p,
+      exact p,
 end
 
 theorem disj_idempot :
   (P∨P) ↔ P  :=
 begin
-  sorry,
+  split,
+    intro disj,
+    cases disj with p p,
+      exact p,
+      exact p,
+    
+    have wk_disj := weaken_disj_left P P,
+    exact wk_disj,
 end
 
 end propositional
@@ -444,25 +498,43 @@ variables P Q : U -> Prop
 theorem demorgan_exists :
   ¬(∃x, P x) → (∀x, ¬P x)  :=
 begin
-  sorry,
+  intro not_exists,
+  intro x,
+  intro px,
+  have exist: ∃ x, P x,
+    existsi x,
+    exact px,
+  have ct := not_exists exist,
+  contradiction,
 end
 
 theorem demorgan_exists_converse :
   (∀x, ¬P x) → ¬(∃x, P x)  :=
 begin
-  sorry,
+  intro for_all,
+  intro exist,
+  cases exist with x px,
+  have npx := for_all x,
+  have ct := npx px,
+  contradiction,
 end
 
 theorem demorgan_forall :
   ¬(∀x, P x) → (∃x, ¬P x)  :=
 begin
-  sorry,
+  intro not_for_all,
+
 end
 
 theorem demorgan_forall_converse :
   (∃x, ¬P x) → ¬(∀x, P x)  :=
 begin
-  sorry,
+  intro exist,
+  intro for_all,
+  cases exist with x npx,
+  have px := for_all x,
+  have ct := npx px,
+  contradiction,
 end
 
 theorem demorgan_forall_law :
@@ -474,7 +546,11 @@ end
 theorem demorgan_exists_law :
   ¬(∃x, P x) ↔ (∀x, ¬P x)  :=
 begin
-  sorry,
+  have dmg_exist := demorgan_exists U P,
+  have dmg_exist_cn := demorgan_exists_converse U P,
+  split,
+    exact dmg_exist,
+    exact dmg_exist_cn,
 end
 
 
@@ -485,19 +561,40 @@ end
 theorem exists_as_neg_forall :
   (∃x, P x) → ¬(∀x, ¬P x)  :=
 begin
-  sorry,
+  intro exist,
+  intro for_all,
+  cases exist with x px,
+  have npx := for_all x,
+  have ct := npx px,
+  contradiction,
 end
 
 theorem forall_as_neg_exists :
   (∀x, P x) → ¬(∃x, ¬P x)  :=
 begin
-  sorry,
+  intro for_all,
+  intro exist,
+  cases exist with x npx,
+  have px := for_all x,
+  have ct := npx px,
+  contradiction,
 end
 
 theorem forall_as_neg_exists_converse :
   ¬(∃x, ¬P x) → (∀x, P x)  :=
 begin
-  sorry,
+  intro n_exist,
+  intro x,
+
+  --Disapointing magic--
+  by_cases P x,
+    exact h,
+
+    have exist: ∃(x: U), ¬P x,
+    existsi x,
+    exact h,
+    have ct := n_exist exist,
+    contradiction,
 end
 
 theorem exists_as_neg_forall_converse :
@@ -526,38 +623,85 @@ end
 theorem exists_conj_as_conj_exists :
   (∃x, P x ∧ Q x) → (∃x, P x) ∧ (∃x, Q x)  :=
 begin
-  sorry,
+  intro exists_conj,
+  cases exists_conj with x conj_x,
+  cases conj_x with px qx,
+  split,
+    existsi x,
+    exact px,
+
+    existsi x,
+    exact qx,
 end
 
 theorem exists_disj_as_disj_exists :
   (∃x, P x ∨ Q x) → (∃x, P x) ∨ (∃x, Q x)  :=
 begin
-  sorry,
+  intro exists_disj,
+  cases exists_disj with x disj_x,
+  cases disj_x with px qx,
+    left,
+    existsi x,
+    exact px,
+
+    right,
+    existsi x,
+    exact qx,
 end
 
 theorem exists_disj_as_disj_exists_converse :
   (∃x, P x) ∨ (∃x, Q x) → (∃x, P x ∨ Q x)  :=
 begin
-  sorry,
+  intro exists_disj,
+  cases exists_disj with exists_px exists_qx,
+    cases exists_px with x px,
+    existsi x,
+    left,
+    exact px,
+
+    cases exists_qx with x qx,
+    existsi x,
+    right,
+    exact qx,
 end
 
 theorem forall_conj_as_conj_forall :
   (∀x, P x ∧ Q x) → (∀x, P x) ∧ (∀x, Q x)  :=
 begin
-  sorry,
+  intro forall_conj,
+  split,
+    intro x,
+    have conj := forall_conj x,
+    exact conj.left,
+
+    intro x,
+    have conj := forall_conj x,
+    exact conj.right,
 end
 
 theorem forall_conj_as_conj_forall_converse :
   (∀x, P x) ∧ (∀x, Q x) → (∀x, P x ∧ Q x)  :=
 begin
-  sorry,
+  intro forall_conj,
+  cases forall_conj with forall_px forall_qx,
+  intro x,
+  split,
+    exact forall_px x,
+    exact forall_qx x,
 end
 
 
 theorem forall_disj_as_disj_forall_converse :
   (∀x, P x) ∨ (∀x, Q x) → (∀x, P x ∨ Q x)  :=
 begin
-  sorry,
+  intro forall_disj,
+  intro x,
+  cases forall_disj with forall_px forall_qx,
+    left,
+    exact forall_px x,
+
+    right,
+    exact forall_qx x,
 end
 
 
