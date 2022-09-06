@@ -261,7 +261,19 @@ end
 theorem demorgan_conj :
   ¬(P∧Q) → (¬Q ∨ ¬P)  :=
 begin
-  sorry,
+  intro n_conj,
+  by_cases P,
+    left,
+    intro q,
+    have conj: P∧Q,
+      split,
+      exact h,
+      exact q,
+    have ct := n_conj conj,
+    contradiction,
+
+    right,
+    exact h,
 end
 
 theorem demorgan_conj_converse :
@@ -281,7 +293,11 @@ end
 theorem demorgan_conj_law :
   ¬(P∧Q) ↔ (¬Q ∨ ¬P)  :=
 begin
-  sorry,
+  have dmg_conj := demorgan_conj P Q,
+  have dmg_conj_cnv := demorgan_conj_converse P Q,
+  split,
+    exact dmg_conj,
+    exact dmg_conj_cnv,
 end
 
 theorem demorgan_disj_law :
@@ -490,7 +506,6 @@ section predicate
 variable U : Type
 variables P Q : U -> Prop
 
-
 ------------------------------------------------
 -- As leis de De Morgan para ∃,∀:
 ------------------------------------------------
@@ -522,8 +537,7 @@ end
 theorem demorgan_forall :
   ¬(∀x, P x) → (∃x, ¬P x)  :=
 begin
-  intro not_for_all,
-
+  sorry,
 end
 
 theorem demorgan_forall_converse :
