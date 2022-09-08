@@ -537,7 +537,22 @@ end
 theorem demorgan_forall :
   ¬(∀x, P x) → (∃x, ¬P x)  :=
 begin
-  sorry,
+  have contrapos: ¬(∃x, ¬P x) → (∀x, P x),
+    intros neg_exist x,
+    by_contradiction npx,
+    have exist: ∃x, ¬P x,
+      existsi x,
+      exact npx,
+    exact neg_exist exist,
+  
+  have impl := contrapositive_law (¬(∃x, ¬P x)) (∀x, P x),
+  cases impl with l r,
+  have contrapos_conv := l contrapos,
+
+  intro for_all,
+  have neg_neg_exist := contrapos_conv for_all,
+  have db_neg := doubleneg_elim (∃x, ¬P x),
+  exact db_neg neg_neg_exist,
 end
 
 theorem demorgan_forall_converse :
