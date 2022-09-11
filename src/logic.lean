@@ -21,8 +21,9 @@ theorem doubleneg_elim :
 begin
   intro nnp,
   by_cases p: P,
+    --case P
     exact p,
-  
+    --case ¬P
     have ct := nnp p,
     contradiction,
 end
@@ -33,8 +34,9 @@ begin
   have fst := doubleneg_elim P,
   have snd := doubleneg_intro P,
   split,
+    --part ¬¬P → P
     exact fst,
-
+    --part P → ¬¬P
     exact snd,
 end
 
@@ -47,8 +49,10 @@ theorem disj_comm :
 begin
   intro disj,
   cases disj,
+    -- case P
     right,
       exact disj,
+    -- case Q
     left,
       exact disj,
 end
@@ -59,8 +63,9 @@ begin
   intro conj,
   cases conj with p q,
   split,
+    -- part Q
     exact q,
-
+    -- part P
     exact p,
 end
 
@@ -75,10 +80,10 @@ begin
   intro disj,
   intro p,
   cases disj,
-
+    --case ¬P
     have contra := disj p,
     contradiction,
-
+    --case Q
     exact disj,
 end
 
@@ -88,9 +93,10 @@ begin
   intro disj,
   intro np,
   cases disj,
+    --case P
     have contra := np disj,
     contradiction,
-
+    --case Q
     exact disj,
 end
 
@@ -116,8 +122,9 @@ begin
   intro impl,
   intro p,
   by_cases q: Q,
+    --case Q
     exact q,
-
+    --case ¬Q
     have np := impl q,
     have contra := np p,
     contradiction,
@@ -129,8 +136,9 @@ begin
   have fst := impl_as_contrapositive P Q,
   have snd := impl_as_contrapositive_converse P Q,
   split,
+    --part (P → Q) → (¬Q → ¬P)
     exact fst,
-
+    --part (¬Q → ¬P) → (P → Q)
     exact snd,
 end
 
@@ -185,10 +193,10 @@ begin
   intro n_conj,
   cases n_conj,
   cases disj,
-
+    --case P
     have contra := n_conj_left disj,
     contradiction,
-
+    --case Q
     have contra := n_conj_right disj,
     contradiction,
 end
@@ -200,9 +208,10 @@ begin
   intro neg_disj,
   cases conj,
   cases neg_disj,
+    --case ¬P
     have ct := neg_disj conj_left,
     contradiction,
-
+    --case ¬Q
     have ct := neg_disj conj_right,
     contradiction,
 end
@@ -229,12 +238,13 @@ theorem demorgan_disj :
 begin
   intro neg_disj,
   split,
+    --part ¬P
     intro p,
     have impl := disj_impl P Q,
     have disj := impl p,
     have ct := neg_disj disj,
     contradiction,
-
+    --part ¬Q
     intro q,
     have impl := disj_impl Q P,
     have wr_disj := impl q,
@@ -251,9 +261,10 @@ begin
   intro disj,
   cases conj_negs with np nq,
   cases disj with p q,
+    --case P
     have ct := np p,
     contradiction,
-
+    --case Q
     have ct := nq q,
     contradiction,
 end
@@ -263,15 +274,19 @@ theorem demorgan_conj :
 begin
   intro n_conj,
   by_cases P,
+    --case P
     left,
     intro q,
     have conj: P∧Q,
       split,
+      --part P
       exact h,
+      --part Q
       exact q,
     have ct := n_conj conj,
     contradiction,
 
+    --case ¬P
     right,
     exact h,
 end
@@ -283,9 +298,10 @@ begin
   intro conj,
   cases conj with p q,
   cases disj_negs with nq np,
+    --case ¬Q
     have ct := nq q,
     contradiction,
-
+    --case ¬P
     have ct := np p,
     contradiction,
 end
@@ -296,7 +312,9 @@ begin
   have dmg_conj := demorgan_conj P Q,
   have dmg_conj_cnv := demorgan_conj_converse P Q,
   split,
+    --part ¬(P∧Q) → (¬Q ∨ ¬P)
     exact dmg_conj,
+    --part (¬Q ∨ ¬P) → ¬(P ∧ Q)
     exact dmg_conj_cnv,
 end
 
@@ -306,7 +324,9 @@ begin
   have dmg_disj := demorgan_disj P Q,
   have dmg_disj_con := demorgan_disj_converse P Q,
   split,
+    --part ¬(P ∨ Q) → (¬P ∧ ¬Q)
     exact dmg_disj,
+    --part (¬P ∧ ¬Q) → ¬(P ∨ Q)
     exact dmg_disj_con,
 end
 
@@ -320,14 +340,19 @@ begin
   intro conj_disj,
   cases conj_disj with p disj,
   cases disj with q r,
+    --case Q
     left,
     split,
+      --part P
       exact p,
+      --part Q
       exact q,
-    
+    --case R
     right,
     split,
+      --part P
       exact p,
+      --part R
       exact r,
 end
 
@@ -336,15 +361,20 @@ theorem distr_conj_disj_converse :
 begin
   intro disj_conj,
   cases disj_conj with conj_pq conj_pr,
+    --case P∧Q
     cases conj_pq with p q,
     split,
+      --part P
       exact p,
+      --part Q∨R
       left,
         exact q,
-    
+    --case P∧R
     cases conj_pr with p r,
     split,
+      --part P
       exact p,
+      --part Q∨R
       right,
         exact r,
 end
@@ -354,18 +384,22 @@ theorem distr_disj_conj :
 begin
   intro distr_disj,
   split,
+    --part P∨Q
     cases distr_disj with p conj_qr,
+      --case P
       left,
         exact p,
-      
+      --case Q∧R
       right,
         cases conj_qr with q r,
         exact q,
     
+    --part P∨R
     cases distr_disj with p conj_qr,
+      --case P
       left,
         exact p,
-      
+      --case Q∧R
       right,
         cases conj_qr with q r,
         exact r,
@@ -377,16 +411,20 @@ begin
   intro distr_conj,
   cases distr_conj with disj_pq disj_pr,
   cases disj_pq with p q,
+    --case P
     left,
       exact p,
-
+    --case Q
     cases disj_pr with p r,
+      --case P
       left,
         exact p,
-      
+      --case R
       right,
         split,
+          --part Q
           exact q,
+          --part R
           exact r,
 end
 
@@ -403,7 +441,9 @@ begin
   intro q,
   have conj : P ∧ Q,
     split,
+      --part P
       exact p,
+      --part Q
       exact q,
   
   have r := cur conj,
@@ -474,11 +514,14 @@ theorem conj_idempot :
 begin
   have left := weaken_conj_left P P,
   split,
+    --part P∧P → P
     exact left,
-    
+    --part P → P∧P
     intro p,
     split,
+      --part P
       exact p,
+      --part P
       exact p,
 end
 
@@ -486,11 +529,14 @@ theorem disj_idempot :
   (P∨P) ↔ P  :=
 begin
   split,
+    --part P∨P → P
     intro disj,
     cases disj with p p,
+      --case P
       exact p,
+      --case P
       exact p,
-    
+    --part P → P∨P
     have wk_disj := weaken_disj_left P P,
     exact wk_disj,
 end
@@ -570,7 +616,9 @@ theorem demorgan_forall_law :
   ¬(∀x, P x) ↔ (∃x, ¬P x)  :=
 begin
   split,
+  --part ¬(∀x, P x) → (∃x, ¬P x)
   exact demorgan_forall U P,
+  --part (∃x, ¬P x) → ¬(∀x, P x)
   exact demorgan_forall_converse U P,
 end
 
@@ -580,7 +628,9 @@ begin
   have dmg_exist := demorgan_exists U P,
   have dmg_exist_cn := demorgan_exists_converse U P,
   split,
+    --part ¬(∃x, P x) → (∀x, ¬P x)
     exact dmg_exist,
+    --part (∀x, ¬P x) → ¬(∃x, P x)
     exact dmg_exist_cn,
 end
 
@@ -619,8 +669,10 @@ begin
 
   --Disapointing magic--
   by_cases P x,
+    --case P x
     exact h,
 
+    --case ¬P x
     have exist: ∃(x: U), ¬P x,
     existsi x,
     exact h,
@@ -642,7 +694,9 @@ theorem forall_as_neg_exists_law :
   (∀x, P x) ↔ ¬(∃x, ¬P x)  :=
 begin
   split,
+  --part (∀x, P x) → ¬(∃x, ¬P x)
   exact forall_as_neg_exists U P,
+  --part ¬(∃x, ¬P x) → (∀x, P x)
   exact forall_as_neg_exists_converse U P,
 end
 
@@ -650,7 +704,9 @@ theorem exists_as_neg_forall_law :
   (∃x, P x) ↔ ¬(∀x, ¬P x)  :=
 begin
   split,
+  --part (∃x, P x) → ¬(∀x, ¬P x)
   exact exists_as_neg_forall U P,
+  --part ¬(∀x, ¬P x) → (∃x, P x)
   exact exists_as_neg_forall_converse U P,
 end
 
@@ -666,9 +722,10 @@ begin
   cases exists_conj with x conj_x,
   cases conj_x with px qx,
   split,
+    --part (∃x, P x)
     existsi x,
     exact px,
-
+    --part (∃x, Q x)
     existsi x,
     exact qx,
 end
@@ -679,10 +736,11 @@ begin
   intro exists_disj,
   cases exists_disj with x disj_x,
   cases disj_x with px qx,
+    --case P x
     left,
     existsi x,
     exact px,
-
+    --case Q x
     right,
     existsi x,
     exact qx,
@@ -693,11 +751,12 @@ theorem exists_disj_as_disj_exists_converse :
 begin
   intro exists_disj,
   cases exists_disj with exists_px exists_qx,
+    --case (∃x, P x)
     cases exists_px with x px,
     existsi x,
     left,
     exact px,
-
+    --case (∃x, Q x)
     cases exists_qx with x qx,
     existsi x,
     right,
@@ -709,10 +768,11 @@ theorem forall_conj_as_conj_forall :
 begin
   intro forall_conj,
   split,
+    --part (∀x, P x)
     intro x,
     have conj := forall_conj x,
     exact conj.left,
-
+    --part (∀x, Q x)
     intro x,
     have conj := forall_conj x,
     exact conj.right,
@@ -725,7 +785,9 @@ begin
   cases forall_conj with forall_px forall_qx,
   intro x,
   split,
+    --part P x
     exact forall_px x,
+    --part Q x
     exact forall_qx x,
 end
 
@@ -736,9 +798,10 @@ begin
   intro forall_disj,
   intro x,
   cases forall_disj with forall_px forall_qx,
+    --case (∀x, P x)
     left,
     exact forall_px x,
-
+    --case (∀x, Q x)
     right,
     exact forall_qx x,
 end
