@@ -299,7 +299,8 @@
     },
     {
       "lean": "theorem add_right_cancel (a t b : mynat) : a + t = b + t → a = b :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "intro h,\r\ninduction t with t ht,\r\n--base case\r\nrw add_zero a at h,\r\nrw add_zero b at h,\r\nexact h,\r\n\r\n--inductive step,\r\nrw add_succ a t at h,\r\nrw add_succ b t at h,\r\nrw succ_eq_succ_iff (a+t) (b+t) at h,\r\nexact ht h,\r\n"
     },
     {
       "lean": "theorem add_left_cancel (t a b : mynat) : t + a = t + b → a = b :=\n",
