@@ -250,7 +250,7 @@
     {
       "lean": "lemma iff_trans (P Q R : Prop) : (P ↔ Q) → (Q ↔ R) → (P ↔ R) :=\n",
       "isSolved": true,
-      "editorText": "intros hpq hqr,\r\nrw hpq,\r\nexact hqr,\r\n"
+      "editorText": "intro iff_pq,\r\nintro iff_qr,\r\ncases iff_pq with hpq hqp,\r\ncases iff_qr with hqr hrq,\r\nsplit,\r\n--first part\r\nintro p,\r\napply hqr,\r\napply hpq,\r\nexact p,\r\n--second part\r\nintro r,\r\napply hqp,\r\napply hrq,\r\nexact r,\r\n"
     },
     {
       "lean": "example (P Q : Prop) : Q → (P ∨ Q) :=\n",
@@ -304,7 +304,8 @@
     },
     {
       "lean": "theorem add_left_cancel (t a b : mynat) : t + a = t + b → a = b :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "intro h,\r\nrw ← add_comm a t at h,\r\nrw ← add_comm b t at h,\r\nexact (add_right_cancel a t b) h,\r\n"
     },
     {
       "lean": "theorem add_right_cancel_iff (t a b : mynat) :  a + t = b + t ↔ a = b :=\n",
