@@ -344,7 +344,8 @@
     },
     {
       "lean": "theorem mul_pos (a b : mynat) : a ≠ 0 → b ≠ 0 → a * b ≠ 0 :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "intro a_ne_zero,\r\nintro b_ne_zero,\r\nintro ab_eq_zero,\r\ncases b with n,\r\n-- Case b = 0\r\n  contradiction,\r\n-- Case b = succ n\r\n  rw mul_succ a n at ab_eq_zero,\r\n  cases a with m,\r\n  -- Case a = 0\r\n    contradiction,\r\n  -- Case a = succ m\r\n    rw add_succ ((succ m)*n) m at ab_eq_zero,\r\n    exact succ_ne_zero _ ab_eq_zero,\r\n    "
     },
     {
       "lean": "theorem eq_zero_or_eq_zero_of_mul_eq_zero (a b : mynat) (h : a * b = 0) :\n  a = 0 ∨ b = 0 :=\n",
