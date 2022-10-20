@@ -439,7 +439,8 @@
     },
     {
       "lean": "lemma lt_aux_two (a b : mynat) : succ a ≤ b → a ≤ b ∧ ¬ (b ≤ a) :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "intro h,\r\ncases h with c hc,\r\nsplit,\r\n--part a ≤ b\r\n  use (succ c),\r\n  rw add_succ a c,\r\n  rw ← succ_add a c,\r\n  exact hc,\r\n-- part ¬ (b ≤ a)\r\n  intro hba,\r\n  cases hba with d hd,\r\n  rw hc at hd,\r\n  rw add_assoc (succ a) c d at hd,\r\n  rw succ_add a (c+d) at hd,\r\n  rw ← add_succ a (c+d) at hd,\r\n  have succ_eq_zero := eq_zero_of_add_right_eq_self hd.symm,\r\n  have boom := succ_ne_zero (c+d) succ_eq_zero,\r\n  contradiction,\r\n  "
     },
     {
       "lean": "lemma lt_iff_succ_le (a b : mynat) : a < b ↔ succ a ≤ b :=\n",
