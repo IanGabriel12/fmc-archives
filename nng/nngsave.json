@@ -349,7 +349,8 @@
     },
     {
       "lean": "theorem eq_zero_or_eq_zero_of_mul_eq_zero (a b : mynat) (h : a * b = 0) :\n  a = 0 ∨ b = 0 :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "cases b with n,\r\n--case b = 0\r\n  right,\r\n  refl,\r\n--case b = succ n\r\n  cases a with m,\r\n  --case a = 0\r\n    left,\r\n    refl,\r\n  --case a = succ m\r\n    rw mul_succ (succ m) n at h,\r\n    rw add_succ ((succ m) * n) m at h,\r\n    have boom := succ_ne_zero _ h,\r\n    contradiction,\r\n    "
     },
     {
       "lean": "theorem mul_eq_zero_iff (a b : mynat): a * b = 0 ↔ a = 0 ∨ b = 0 :=\n",
