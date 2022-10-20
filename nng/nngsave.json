@@ -424,7 +424,8 @@
     },
     {
       "lean": "theorem not_succ_le_self (a : mynat) : ¬ (succ a ≤ a) :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "intro h,\r\ncases h with b hb,\r\nrw succ_add a b at hb,\r\nrw ← add_succ a b at hb,\r\nhave succb_neq_zero := succ_ne_zero b,\r\nhave succb_eq_zero := eq_zero_of_add_right_eq_self hb.symm,\r\ncontradiction,\r\n"
     },
     {
       "lean": "theorem add_le_add_left {a b : mynat} (h : a ≤ b) (t : mynat) :\n  t + a ≤ t + b :=\n",
