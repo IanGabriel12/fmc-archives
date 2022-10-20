@@ -389,7 +389,8 @@
     },
     {
       "lean": "theorem le_antisymm (a b : mynat) (hab : a ≤ b) (hba : b ≤ a) : a = b :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "cases hab with i hi,\r\ncases hba with j hj,\r\nrw hj at hi,\r\nrw add_assoc b j i at hi,\r\nhave symm_hi : b + (j+i) = b,\r\n  symmetry,\r\n  exact hi,\r\nhave ji_eq_zero := eq_zero_of_add_right_eq_self symm_hi,\r\nhave j_eq_zero := add_right_eq_zero ji_eq_zero,\r\nrw j_eq_zero at hj,\r\nrw add_zero b at hj,\r\nexact hj,\r\n"
     },
     {
       "lean": "lemma le_zero (a : mynat) (h : a ≤ 0) : a = 0 :=\n",
