@@ -369,7 +369,8 @@
     },
     {
       "lean": "lemma le_refl (x : mynat) : x ≤ x :=\n",
-      "editorText": "use 0,\r\nrw add_zero x,\r\nrefl,"
+      "isSolved": true,
+      "editorText": "use 0,\r\nrw add_zero x,\r\nrefl,\r\n"
     },
     {
       "lean": "theorem le_succ (a b : mynat) : a ≤ b → a ≤ (succ b) :=\n",
