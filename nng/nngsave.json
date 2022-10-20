@@ -434,7 +434,8 @@
     },
     {
       "lean": "lemma lt_aux_one (a b : mynat) : a ≤ b ∧ ¬ (b ≤ a) → succ a ≤ b :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "intro h,\r\ncases h with hab hba,\r\ncases hab with c hc,\r\ncases c with n,\r\n--case c = 0\r\n  rw add_zero a at hc,\r\n  rw ← add_zero b at hc,\r\n  have b_le_a : b ≤ a,\r\n    use 0,\r\n    exact hc.symm,\r\n  have boom := hba b_le_a,\r\n  contradiction,\r\n--case c = succ n\r\n  use n,\r\n  rw succ_add a n,\r\n  rw ← add_succ a n,\r\n  exact hc,\r\n  "
     },
     {
       "lean": "lemma lt_aux_two (a b : mynat) : succ a ≤ b → a ≤ b ∧ ¬ (b ≤ a) :=\n",
