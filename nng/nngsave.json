@@ -359,7 +359,8 @@
     },
     {
       "lean": "theorem mul_left_cancel (a b c : mynat) (ha : a ≠ 0) : a * b = a * c → b = c :=\n",
-      "editorText": "sorry"
+      "isSolved": true,
+      "editorText": "induction c with d hd generalizing b,\r\n-- Part (∀ b)[a*b = a*0 → b = 0]\r\n  rw mul_zero a,\r\n  intro h,\r\n  have disj := eq_zero_or_eq_zero_of_mul_eq_zero a b h,\r\n  cases disj with a_zero b_zero,\r\n  -- Case a = 0\r\n    have boom := ha a_zero,\r\n    contradiction,\r\n  -- Case b = 0\r\n    exact b_zero,\r\n-- Part (∀ d)[(∀ b)[a*b = a*d → b = d] → (∀ b)[a*b = a* succ d → b = succ d]]\r\n  intro ha_succ_d,\r\n  cases b with n,\r\n  -- Case b = 0,\r\n    rw mul_zero a at ha_succ_d,\r\n    have symm_ha_succ_d : a * (succ d) = 0,\r\n      symmetry,\r\n      exact ha_succ_d,\r\n    have disj := (mul_eq_zero_iff a (succ d)).elim_left symm_ha_succ_d,\r\n    cases disj with a_eq_zero succd_eq_zero,\r\n    -- Case a = 0\r\n      have boom := ha a_eq_zero,\r\n      contradiction,\r\n    -- Case succd_eq_zero\r\n      symmetry,\r\n      exact succd_eq_zero,\r\n  \r\n  -- Case b = succ n\r\n    apply succ_eq_succ_of_eq,\r\n    rw mul_succ a n at ha_succ_d,\r\n    rw mul_succ a d at ha_succ_d,\r\n    have an_eq_ad := add_right_cancel (a*n) a (a*d) ha_succ_d,\r\n    have n_eq_d := hd n an_eq_ad,\r\n    exact n_eq_d,"
     },
     {
       "lean": "lemma one_add_le_self (x : mynat) : x ≤ 1 + x :=\n",
